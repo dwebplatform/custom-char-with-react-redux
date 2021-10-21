@@ -21,6 +21,7 @@ export interface IChar {
   STRING_VALUE: string | null;
   ARRAY_VALUE: ICharSelector[] | null;
   BOOL_VALUE: boolean | null;
+  groupId: number;
 }
 interface IElement {
   id: number;
@@ -28,10 +29,29 @@ interface IElement {
   chars: IChar[];
 }
 interface ICharState {
+  charGroups: any[];
   elements: IElement[];
   currentElement: IElement | null;
 }
 const initialState: ICharState = {
+  charGroups: [
+    {
+      id:1,
+      name:'Цветы',
+    },
+    {
+      id:2,
+      name:'Канцелярские товары',
+    },
+    {
+      id:3,
+      name:'Хоз товары'
+    },
+    {
+      id:4,
+      name:'Другое'
+    }
+  ],  
   elements: [
     {
       id: 1,
@@ -43,15 +63,17 @@ const initialState: ICharState = {
           valueType: CHAR_VARIANTS.STRING,
           STRING_VALUE: "Хорошая",
           ARRAY_VALUE: null,
-          BOOL_VALUE: null
+          BOOL_VALUE: null,
+          groupId: 1,
         },
         {
           id: 2,
-          name: 'Есть цвет !!!',
+          name: 'Есть цвет',
           valueType: CHAR_VARIANTS.BOOL,
           STRING_VALUE: null,
           ARRAY_VALUE: null,
-          BOOL_VALUE: true
+          BOOL_VALUE: true,
+          groupId: 2,
         },
         {
           id: 3,
@@ -74,9 +96,11 @@ const initialState: ICharState = {
           value:'Гаичный ключ',
           isSelected: false,
         
-        }
+        },
       ],
-          BOOL_VALUE: null
+          BOOL_VALUE: null,
+          groupId: 2,
+
         },
         {
           
@@ -85,7 +109,9 @@ const initialState: ICharState = {
           valueType: CHAR_VARIANTS.BOOL,
           STRING_VALUE: null,
           ARRAY_VALUE: null,
-          BOOL_VALUE: true
+          BOOL_VALUE: true,
+          groupId: 2,
+
         }
       ]
     },
@@ -113,7 +139,9 @@ const initialState: ICharState = {
         value: 'Стеклянные',
         isSelected: false,
       }],
-          BOOL_VALUE: null
+          BOOL_VALUE: null,
+          groupId: 2,
+
         },
         {
           id: 6,
@@ -121,9 +149,12 @@ const initialState: ICharState = {
           valueType: CHAR_VARIANTS.STRING,
           STRING_VALUE: "6",
           ARRAY_VALUE: null,
-          BOOL_VALUE: null
+          BOOL_VALUE: null,
+          groupId: 2,
+
         }
-      ]
+      ],
+      
     },
     {
       id: 3,
@@ -135,13 +166,16 @@ const initialState: ICharState = {
           valueType: CHAR_VARIANTS.STRING,
           STRING_VALUE: "Оптимальная",
           ARRAY_VALUE: null,
-          BOOL_VALUE: null
+          BOOL_VALUE: null,
+          groupId: 2,
         }
       ]
     },
   ],
   currentElement: null,
 }
+
+
 
 export const charsSlice = createSlice({
   name: 'chars',

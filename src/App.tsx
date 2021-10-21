@@ -1,16 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
 
 import './styles/char.scss';
-import { CharsBoxComponent } from './components/CharsComponent';
+import { CharsBoxComponent, CharsContainerComponent } from './components/CharsComponent';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from './redux/store';
 import { chooseElementAction } from './redux/features/chars/charsSlice';
@@ -22,7 +15,7 @@ function App() {
   const handleChoseElement = (id: number) => {
     dispatch(chooseElementAction({id}));
   }
-  return (
+   return (
     <Container sx={{ width: '500px' }}>
       <Box style={{ width: '100%', marginBottom: '1rem', display: 'flex', justifyContent: 'center', gap: '10px' }}>
 
@@ -43,7 +36,8 @@ function App() {
           </Box>);
         })}
       </Box>
-      <CharsBoxComponent />
+          <CharsContainerComponent/>
+      {/* <CharsBoxComponent /> */}
     </Container>
   );
 }

@@ -1,3 +1,5 @@
+
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 
@@ -15,6 +17,8 @@ import Checkbox from '@mui/material/Checkbox';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 
 import FormControl from "@mui/material/FormControl";
 
@@ -22,120 +26,25 @@ import { EmptyBox } from './EmptyBox';
 
 
 import { changeArrayCharAction, changeBoolCharAction, changeStringCharAction, CHAR_VARIANTS, IChar } from '../redux/features/chars/charsSlice';
+import { useState } from 'react';
+import { RowArrayRenderer, RowBoolRenderer, RowRenderer } from '../renderers/RowsRenderers';
+import { useChangeChar } from '../redux/features/chars/hooks/useChangeChars';
+import { CharsGroupBoxComponent } from './CharGroupBoxComponent';
 
 // window._ = _;
 
-const RowArrayRenderer = ({ char, elementId, onChangeCharValue }: {
-  char: IChar,
-  elementId: number, onChangeCharValue: (currentElementId: number, charId: number, variant: CHAR_VARIANTS, value: any) => any
-}) => {
-  
-  const handleChange =(id:number|string)=>{
-    onChangeCharValue(elementId,char.id,CHAR_VARIANTS.ARRAY, id);
-  }
-  if (!char.ARRAY_VALUE) {
-    return null;
-  }
-
-  let curentSubChar = char.ARRAY_VALUE.find(el=>el.isSelected);
-  if(!curentSubChar){
-    return null;
-  }
-
-  let curentSubCharId = curentSubChar.id;
-  return (<TableRow>
-    <TableCell>
-      <Box>
-        {char.name}
-      </Box>
-    </TableCell>
-    <TableCell>
-      <Box>
-        <FormControl fullWidth>
-          <TextField style={{ position: 'absolute' }} variant="outlined" InputLabelProps={{ shrink: true }}
-            value={char.ARRAY_VALUE.find(subChar => subChar.isSelected)?.value || '...'} />
-          <Select value={curentSubCharId} onChange={(e)=>{
-            handleChange(e.target.value);
-          }}>
-            {char.ARRAY_VALUE.map((subChar) => {
-              return (<MenuItem 
-                selected={subChar.isSelected} 
-                value={subChar.id}
-                key={subChar.id}>{subChar.value}</MenuItem>)
-            })}
-          </Select>
-        </FormControl>
-      </Box>
-    </TableCell>
-  </TableRow>);
-};
-const RowBoolRenderer = ({ char, elementId, onChangeCharValue }: {
-  char: IChar,
-  elementId: number, onChangeCharValue: (currentElementId: number, charId: number, variant: CHAR_VARIANTS, value: any) => any
-}) => {
-  return (<TableRow key={char.id}>
-    <TableCell style={{ width: '50%' }} className="char-item__key">
-      <Box>
-        {char.name}
-      </Box>
-    </TableCell>
-    <TableCell>
-      <Box>
-        <Checkbox
-          checked={char.BOOL_VALUE === true}
-          onChange={(e) => {
-            onChangeCharValue(elementId, char.id, CHAR_VARIANTS.BOOL, !e.target.value);
-          }}
-          value={char.BOOL_VALUE}
-        />
-      </Box>
-    </TableCell>
-  </TableRow>);
-}
-const RowRenderer = ({ char, elementId, onChangeCharValue }: {
-  char: IChar,
-  elementId: number, onChangeCharValue: (currentElementId: number, charId: number, variant: CHAR_VARIANTS, value: any) => any
-}) => {
-  return (<TableRow>
-    <TableCell style={{ width: '50%' }} className="char-item__key">
-      <Box>
-        {char.name}
-      </Box>
-    </TableCell>
-    <TableCell style={{ width: '50%' }} >
-      <Box>
-        <TextField value={char.STRING_VALUE} onChange={(e) => {
-          onChangeCharValue(elementId, char.id, CHAR_VARIANTS.STRING, e.target.value);
-        }} variant="standard" />
-      </Box>
-    </TableCell>
-  </TableRow>);
-}
 
 export const CharsBoxComponent = () => {
 
   const { currentElement } = useSelector((state: RootState) => state.chars);
-  const dispatch = useDispatch();
-  const changeCharValue = (elementId: number, charId: number, charVariant: CHAR_VARIANTS, value: any) => {
-    if (charVariant === CHAR_VARIANTS.BOOL) {
-      // action for change bool only
-      return dispatch(changeBoolCharAction({ elementId, charId, value }));
-    }
-    if (charVariant === CHAR_VARIANTS.ARRAY) {
-      //TODO: добавить обработку изменения свойств массива:
-      // action for change ARRAY only
-      return dispatch(changeArrayCharAction({ elementId, charId, value }));
-    }
-    if (charVariant === CHAR_VARIANTS.STRING) {
-      // action for change STRING only
-      return dispatch(changeStringCharAction({ elementId, charId, value }));
-    }
-  }
+  const {changeCharValue} = useChangeChar();
+
   if (!currentElement) {
     return <EmptyBox />;
   }
 
-  return (<Box>
+  return (
+  <Box>    
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 100 }} size="small" aria-label="a dense table">
         <TableHead>
@@ -145,26 +54,7 @@ export const CharsBoxComponent = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {/* 
-         //TODO если выбран вариант группировки, то перед тем как отобразить, создать массив по группам,
-         Пример
-         было {"Left":[{"id":1,"name":"Char 1","group":"Left"},{"id":1,"name":"Char 1","group":"Left"}],
-         "Middle":[{"id":2,"name":"Char 2","group":"Middle"}],
-         "Right":[{"id":3,"name":"Char 4","group":"Right"}]}  
-         если группа, то массив
-         будет
-         groupedArray.map((groupArray)=>{
-           <Accordeon>{
-             {groupArray.map((item)=>{
-               return (<tr>
-                  <td>{item.key}</td>
-                  <td>{item.value}</td>
-                  
-                </tr>)
-             })}
-           }</Accordeon>
-         })
-         */}
+   
           {currentElement.chars.map((char) => {
             if (char.valueType === CHAR_VARIANTS.STRING) {
               return (<RowRenderer key={char.id} char={char}
@@ -194,4 +84,36 @@ export const CharsBoxComponent = () => {
   </Box>)
 }
 
+
+
+export const TabVariant:React.FC<any>=({children, value,index})=>{
+  return (<Box hidden={value!==index}>  {value===index &&children}</Box>);
+}
+export const CharsContainerComponent=()=>{
+
+  const [curTab, setCurTab] = useState<number>(0);
+  return (<Box>
+    <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+      <Tabs
+      value={curTab}
+      onChange={(e:any, newValue:number)=>{
+        setCurTab(newValue)
+      }}
+      >
+        <Tab label="Характеристики" value={0}  />
+        <Tab label="По группам" value={1} />
+        <Tab label="По алфавиту" value={2} />
+      </Tabs>
+      <TabVariant value={curTab} index={0}>
+           <CharsBoxComponent/>
+      </TabVariant>
+      <TabVariant value={curTab} index={1}>
+        <CharsGroupBoxComponent/>
+      </TabVariant>
+      <TabVariant value={curTab} index={2}>
+      <Box>Показать по алфавиту</Box></TabVariant>
+      
+    </Box>
+    </Box>)
+}
 

@@ -8,12 +8,18 @@ export enum CHAR_VARIANTS {
 }
 
 
+export interface ICharSelector {
+  id: number;
+  value: string;
+  isSelected: boolean;
+}
+
 export interface IChar {
   id: number;
   name: string;
   valueType: CHAR_VARIANTS;
   STRING_VALUE: string | null;
-  ARRAY_VALUE: string[] | null;
+  ARRAY_VALUE: ICharSelector[] | null;
   BOOL_VALUE: boolean | null;
 }
 interface IElement {
@@ -41,7 +47,7 @@ const initialState: ICharState = {
         },
         {
           id: 2,
-          name: 'Есть цвет',
+          name: 'Есть цвет !!!',
           valueType: CHAR_VARIANTS.BOOL,
           STRING_VALUE: null,
           ARRAY_VALUE: null,
@@ -52,7 +58,24 @@ const initialState: ICharState = {
           name: 'Инструменты',
           valueType: CHAR_VARIANTS.ARRAY,
           STRING_VALUE: null,
-          ARRAY_VALUE: ['Молоток', 'Отвертка', 'Гаичный ключ'],
+          ARRAY_VALUE: [{
+            id: 1,
+            value:'Молоток',
+            isSelected: false,
+          },
+        {
+          id: 2,
+          value:'Отвертка',
+          isSelected: true,
+        
+        },
+        {
+          id: 3,
+          value:'Гаичный ключ',
+          isSelected: false,
+        
+        }
+      ],
           BOOL_VALUE: null
         },
         {
@@ -75,7 +98,21 @@ const initialState: ICharState = {
           name: 'Коробки',
           valueType: CHAR_VARIANTS.ARRAY,
           STRING_VALUE: null,
-          ARRAY_VALUE: ['Пластиковые', 'Бумажные', 'Стеклянные'],
+          ARRAY_VALUE: [{
+            id: 5,
+            value:'Пластиковые',
+            isSelected: false,
+          },
+        {
+          id: 6,
+          value:'Бумажные',
+          isSelected: true,
+        },
+      {
+        id: 7,
+        value: 'Стеклянные',
+        isSelected: false,
+      }],
           BOOL_VALUE: null
         },
         {
@@ -94,9 +131,9 @@ const initialState: ICharState = {
       chars: [
         {
           id: 7,
-          name: 'Производительность',
+          name: 'Экономичность',
           valueType: CHAR_VARIANTS.STRING,
-          STRING_VALUE: "Хорошая",
+          STRING_VALUE: "Оптимальная",
           ARRAY_VALUE: null,
           BOOL_VALUE: null
         }
@@ -110,6 +147,31 @@ export const charsSlice = createSlice({
   name: 'chars',
   initialState,
   reducers: {
+    changeArrayCharAction:(state, action:PayloadAction<{elementId:number; charId:number; value:any}>)=>{
+      let curEl = state.elements.find(el=>el.id=== action.payload.elementId);
+      if(!curEl){
+        return;
+      }
+      state.currentElement = curEl;
+      state.currentElement.chars = state.currentElement.chars.map(char=>{
+        if( char.id === action.payload.charId ){
+        
+          // если у текущей характеристики, есть массив, то его можно менять:
+          if(char.ARRAY_VALUE){
+            char.ARRAY_VALUE = char.ARRAY_VALUE.map((subChar)=>{
+              if(subChar.id === action.payload.value){ // пришло событие, что выбранная характеристика в selector c этим id:
+                subChar.isSelected = true;
+              } else {
+                subChar.isSelected = false;
+              }
+              return subChar;
+            })
+          }
+        }
+        return char;
+      });      
+
+    },
     changeStringCharAction:(state,action: PayloadAction<{
       elementId:number;
       charId:number;
@@ -155,5 +217,5 @@ export const charsSlice = createSlice({
 });
 
 
-export const { chooseElementAction,changeBoolCharAction,changeStringCharAction } = charsSlice.actions;
+export const { chooseElementAction,changeBoolCharAction,changeStringCharAction,changeArrayCharAction } = charsSlice.actions;
 export const charsReducer = charsSlice.reducer;

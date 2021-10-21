@@ -1,6 +1,11 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 
+export enum SORTED_VARIANTS { 
+  ALPHABET ="alphabet",
+  
+}
+
 export enum CHAR_VARIANTS {
   ARRAY = "ARRAY",
   STRING = "STRING",

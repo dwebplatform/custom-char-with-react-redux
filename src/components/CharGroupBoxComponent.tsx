@@ -52,42 +52,42 @@ const CharsAccordion:React.FC<any> = ({children, groupName}) => {
 }
 
 
-export const CharGroupItemComponent: React.FC<any> =({children})=>{
-  return (<TableCell style={{ width: '100%' }}>
-  <CharsAccordion groupName="Цветы">
-  <Box>
-     <TableContainer component={Paper}>
-       <Table sx={{ minWidth: 100 }} size="small" aria-label="a dense table">
-         <TableHead>
-           <TableRow>
-             <TableCell>Тип</TableCell>
-             <TableCell>Название</TableCell>
-           </TableRow>
-         </TableHead>
-         <TableBody>
-           {/* !//!массив характерискик принадлежащий данной группе */}
-           {children}
-         </TableBody>
-       </Table>
-     </TableContainer>
-     </Box>
-  </CharsAccordion>
- </TableCell>);
+export const CharGroupWrapper: React.FC<any> =({groupName,children})=>{
+  return ( <TableRow>
+    <TableCell style={{ width: '100%' }}>
+     <CharsAccordion groupName={groupName}>
+     <Box>
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 100 }} size="small" aria-label="a dense table">
+            <TableHead>
+              <TableRow>
+                <TableCell >Тип</TableCell>
+                <TableCell>Название</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {children}
+              </TableBody>
+                      </Table>
+                    </TableContainer>
+                    </Box>
+                 </CharsAccordion>
+                </TableCell>
+                </TableRow>
+              );
 }
 export const CharsGroupBoxComponent = () => {
 
   const { currentElement, charGroups } = useSelector((state: RootState) => state.chars);
   const { changeCharValue } = useChangeChar();
   if (!currentElement) {
-  
     return <EmptyBox />;
   }
+
   const grouperrisedChars = _.groupBy(currentElement.chars, (char)=>char.groupId);
 
-  console.log(grouperrisedChars)
   return (
-    <Box>
-      
+    <Box>      
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 100 }} size="small" aria-label="a dense table">
           <TableHead>
@@ -98,27 +98,11 @@ export const CharsGroupBoxComponent = () => {
           <TableBody>
             {/* 
             //!Группа характеристик */}
-
-
             {  Object.keys(grouperrisedChars).map((groupId)=>{
-     
               let charsForGroup  = grouperrisedChars[groupId];
               return (
-                <TableRow>
-                <TableCell style={{ width: '100%' }}>
-                 <CharsAccordion groupName={charGroups[+groupId].name}>
-                 <Box>
-                    <TableContainer component={Paper}>
-                      <Table sx={{ minWidth: 100 }} size="small" aria-label="a dense table">
-                        <TableHead>
-                          <TableRow>
-                            <TableCell >Тип</TableCell>
-                            <TableCell>Название</TableCell>
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
+                <CharGroupWrapper key={groupId} groupName={charGroups[+groupId].name}>               
                           {/* !//!массив характерискик принадлежащий данной группе */}
-
                   {charsForGroup.map(char=>{
                      if (char.valueType === CHAR_VARIANTS.STRING) {
                       return (<RowRenderer key={char.id} char={char}
@@ -142,17 +126,7 @@ export const CharsGroupBoxComponent = () => {
                     }
                     return null;
                   })}
-
-
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                    </Box>
-                 </CharsAccordion>
-                </TableCell>
-                </TableRow>
-              )
-    
+                  </CharGroupWrapper>) 
   })}
             
           </TableBody>

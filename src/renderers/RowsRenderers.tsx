@@ -43,8 +43,6 @@ export const RowArrayRenderer = ({ char, elementId, onChangeCharValue }: {
     <TableCell>
       <Box>
         <FormControl fullWidth>
-          <TextField style={{ position: 'absolute' }} variant="outlined" InputLabelProps={{ shrink: true }}
-            value={char.ARRAY_VALUE.find(subChar => subChar.isSelected)?.value || '...'} />
           <Select value={curentSubCharId} onChange={(e)=>{
             handleChange(e.target.value);
           }}>

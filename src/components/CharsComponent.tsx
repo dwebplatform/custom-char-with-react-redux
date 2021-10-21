@@ -25,7 +25,7 @@ import FormControl from "@mui/material/FormControl";
 import { EmptyBox } from './EmptyBox';
 
 
-import { changeArrayCharAction, changeBoolCharAction, changeStringCharAction, CHAR_VARIANTS, IChar } from '../redux/features/chars/charsSlice';
+import { changeArrayCharAction, changeBoolCharAction, changeStringCharAction, CHAR_VARIANTS, IChar, SORTED_VARIANTS } from '../redux/features/chars/charsSlice';
 import { useState } from 'react';
 import { RowArrayRenderer, RowBoolRenderer, RowRenderer } from '../renderers/RowsRenderers';
 import { useChangeChar } from '../redux/features/chars/hooks/useChangeChars';
@@ -34,7 +34,7 @@ import { CharsGroupBoxComponent } from './CharGroupBoxComponent';
 // window._ = _;
 
 
-export const CharsBoxComponent = () => {
+export const CharsBoxComponent:React.FC<any> = ({sortedBy}:{sortedBy: SORTED_VARIANTS}) => {
 
   const { currentElement } = useSelector((state: RootState) => state.chars);
   const {changeCharValue} = useChangeChar();
@@ -42,7 +42,15 @@ export const CharsBoxComponent = () => {
   if (!currentElement) {
     return <EmptyBox />;
   }
-
+  let sortedChars = [...currentElement.chars];
+  //! Если пришла фраза отсортировать по алфавиту, сортируем по нему:
+  if(sortedBy === SORTED_VARIANTS.ALPHABET){
+    sortedChars =  sortedChars.sort((a, b)=>{
+      if(a.name < b.name) { return -1; }
+      if(a.name > b.name) { return 1; }
+      return 0;
+  })
+  }
   return (
   <Box>    
     <TableContainer component={Paper}>
@@ -55,7 +63,7 @@ export const CharsBoxComponent = () => {
         </TableHead>
         <TableBody>
    
-          {currentElement.chars.map((char) => {
+          {sortedChars.map((char) => {
             if (char.valueType === CHAR_VARIANTS.STRING) {
               return (<RowRenderer key={char.id} char={char}
                 elementId={currentElement.id}
@@ -111,7 +119,9 @@ export const CharsContainerComponent=()=>{
         <CharsGroupBoxComponent/>
       </TabVariant>
       <TabVariant value={curTab} index={2}>
-      <Box>Показать по алфавиту</Box></TabVariant>
+        {/* TODO: сортировать по алфавиту */}
+        <CharsBoxComponent sortedBy={SORTED_VARIANTS.ALPHABET}/>
+      </TabVariant>
       
     </Box>
     </Box>)

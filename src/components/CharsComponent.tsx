@@ -31,8 +31,7 @@ import { RowArrayRenderer, RowBoolRenderer, RowRenderer } from '../renderers/Row
 import { useChangeChar } from '../redux/features/chars/hooks/useChangeChars';
 import { CharsGroupBoxComponent } from './CharGroupBoxComponent';
 
-// window._ = _;
-
+import './chars-components.scss';
 
 export const CharsBoxComponent:React.FC<any> = ({sortedBy}:{sortedBy: SORTED_VARIANTS}) => {
 
@@ -49,7 +48,7 @@ export const CharsBoxComponent:React.FC<any> = ({sortedBy}:{sortedBy: SORTED_VAR
       if(a.name < b.name) { return -1; }
       if(a.name > b.name) { return 1; }
       return 0;
-  })
+  });
   }
   return (
   <Box>    
@@ -57,7 +56,7 @@ export const CharsBoxComponent:React.FC<any> = ({sortedBy}:{sortedBy: SORTED_VAR
       <Table sx={{ minWidth: 100 }} size="small" aria-label="a dense table">
         <TableHead>
           <TableRow>
-            <TableCell>Тип</TableCell>
+            <TableCell className="char-header__title">Тип</TableCell>
             <TableCell>Название</TableCell>
           </TableRow>
         </TableHead>
@@ -67,8 +66,7 @@ export const CharsBoxComponent:React.FC<any> = ({sortedBy}:{sortedBy: SORTED_VAR
             if (char.valueType === CHAR_VARIANTS.STRING) {
               return (<RowRenderer key={char.id} char={char}
                 elementId={currentElement.id}
-                onChangeCharValue={changeCharValue}
-              />);
+                onChangeCharValue={changeCharValue}/>);
             }
             if (char.valueType === CHAR_VARIANTS.BOOL) {
               return <RowBoolRenderer key={char.id}
@@ -100,29 +98,26 @@ export const TabVariant:React.FC<any>=({children, value,index})=>{
 export const CharsContainerComponent=()=>{
 
   const [curTab, setCurTab] = useState<number>(0);
+
+
   return (<Box>
     <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-      <Tabs
-      value={curTab}
-      onChange={(e:any, newValue:number)=>{
-        setCurTab(newValue)
-      }}
-      >
-        <Tab label="Характеристики" value={0}  />
-        <Tab label="По группам" value={1} />
-        <Tab label="По алфавиту" value={2} />
-      </Tabs>
+      <div className="tabs">
+        <div className="tabs__item">
+        <button className={`tabs__item-button ${ curTab === 0 ? 'selected':''}`} onClick={()=>setCurTab(0)} value={0}>По алфавиту</button>
+        </div>
+        <div className="tabs__item" >
+          <button  
+           className={`tabs__item-button ${curTab === 1 ? 'selected':''}`}
+          onClick={()=>setCurTab(1)} value={1}>По группам</button>
+        </div>
+      </div>
       <TabVariant value={curTab} index={0}>
-           <CharsBoxComponent/>
+        <CharsBoxComponent sortedBy={SORTED_VARIANTS.ALPHABET}/>
       </TabVariant>
       <TabVariant value={curTab} index={1}>
         <CharsGroupBoxComponent/>
       </TabVariant>
-      <TabVariant value={curTab} index={2}>
-        {/* TODO: сортировать по алфавиту */}
-        <CharsBoxComponent sortedBy={SORTED_VARIANTS.ALPHABET}/>
-      </TabVariant>
-      
     </Box>
     </Box>)
 }

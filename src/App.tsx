@@ -7,37 +7,22 @@ import { CharsBoxComponent, CharsContainerComponent } from './components/CharsCo
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from './redux/store';
 import { chooseElementAction } from './redux/features/chars/charsSlice';
+import { FormControl, MenuItem, Select } from '@mui/material';
+import { ElementSelector } from './components/ElementSelector';
+
+
 function App() {
 
-  const { elements } = useSelector((state: RootState) => state.chars);
+  
   const dispatch = useDispatch();
 
-  const handleChoseElement = (id: number) => {
-    dispatch(chooseElementAction({id}));
-  }
-   return (
+  
+  return (
     <Container sx={{ width: '500px' }}>
       <Box style={{ width: '100%', marginBottom: '1rem', display: 'flex', justifyContent: 'center', gap: '10px' }}>
-
-        {elements.map((element) => {
-          return (<Box key={element.id}
-            onClick={(e) => handleChoseElement(element.id)}
-            style={{
-              display: 'flex',
-              cursor: 'pointer',
-              justifyContent: 'center',
-              alignItems: 'center',
-              width: '100px',
-              height: '100px',
-              border: '1px solid red',
-              textAlign: 'center',
-            }}>
-            {element.name}
-          </Box>);
-        })}
+        <ElementSelector />
       </Box>
-          <CharsContainerComponent/>
-      {/* <CharsBoxComponent /> */}
+      <CharsContainerComponent />
     </Container>
   );
 }

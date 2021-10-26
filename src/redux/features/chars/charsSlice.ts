@@ -41,7 +41,7 @@ interface ICharState {
 const initialState: ICharState = {
   charGroups: [
     {
-      id:1,
+      id: 1,
       name:'Цветы',
     },
     {
@@ -98,13 +98,13 @@ const initialState: ICharState = {
         },
         {
           id: 3,
-          value:'Гаичный ключ',
+          value:'Гаечный ключ',
           isSelected: false,
         
         },
       ],
           BOOL_VALUE: null,
-          groupId: 2,
+          groupId: 1,
 
         },
         {

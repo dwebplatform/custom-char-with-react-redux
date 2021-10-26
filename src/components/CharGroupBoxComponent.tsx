@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React,{useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 
@@ -33,16 +33,33 @@ import { useChangeChar } from './../redux/features/chars/hooks/useChangeChars';
 
 import '../styles/chars-group.scss';
 import { RowArrayRenderer, RowBoolRenderer, RowRenderer } from '../renderers/RowsRenderers';
-// window._ = _;
+import { PlusIcon, MinusIcon } from './../renderers/RowsRenderers';
 
-const CharsAccordion:React.FC<any> = ({children, groupName}) => {
+interface ICharsAccordion {
+  isFirst: boolean;
+  children: any;
+  groupName: string;
+}
+
+const CharsAccordion:React.FC<ICharsAccordion> = ({isFirst,children, groupName}) => {
+  const [isExpanded,setExpanded] = useState<boolean>(isFirst);
+  const handleChange=()=>{
+    setExpanded(!isExpanded);
+  }
   return (<Accordion
-    className="chars-group">
-    <AccordionSummary
-      expandIcon={<div className="chars-group__plus-icon">+</div>}
-      id="panel1a-header"
-      className="chars-group__accordion-summary">
-      <Typography>{groupName}</Typography>
+    className="chars-group"
+    expanded={isExpanded}
+    onChange={handleChange}>
+    <AccordionSummary  className="chars-group__accordion-summary">
+        <Box className="chars-group__accordion-title">
+        <Box className="chars-group__accordion-title-item">
+        {!isExpanded && <PlusIcon/>}
+        {isExpanded && <MinusIcon/>}
+        </Box>
+        <Box className="chars-group__accordion-title-item">
+          <Typography className="chars-group__accordion-title-text">{groupName}</Typography>
+        </Box>
+        </Box>
     </AccordionSummary>
     <AccordionDetails>
       {children}
@@ -52,16 +69,23 @@ const CharsAccordion:React.FC<any> = ({children, groupName}) => {
 }
 
 
-export const CharGroupWrapper: React.FC<any> =({groupName,children})=>{
-  return ( <TableRow>
+
+interface ICharGroupWrapper  {
+  isFirst: boolean;
+  groupName: string;
+  children: any;
+}
+export const CharGroupWrapper: React.FC<ICharGroupWrapper> =({isFirst, groupName,children})=>{
+  console.log(isFirst);
+  return (<TableRow>
     <TableCell style={{ width: '100%' }}>
-     <CharsAccordion groupName={groupName}>
+     <CharsAccordion isFirst={isFirst} groupName={groupName}>
      <Box>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 100 }} size="small" aria-label="a dense table">
             <TableHead>
               <TableRow>
-                <TableCell >Тип</TableCell>
+                <TableCell className="char-header__title">Тип</TableCell>
                 <TableCell>Название</TableCell>
               </TableRow>
             </TableHead>
@@ -85,30 +109,34 @@ export const CharsGroupBoxComponent = () => {
   }
 
   const grouperrisedChars = _.groupBy(currentElement.chars, (char)=>char.groupId);
-
+  console.log(grouperrisedChars);
   return (
     <Box>      
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 100 }} size="small" aria-label="a dense table">
-          <TableHead>
-            <TableRow>
-              <TableCell>Сортировка по группам</TableCell>
-            </TableRow>
-          </TableHead>
           <TableBody>
             {/* 
-            //!Группа характеристик */}
-            {  Object.keys(grouperrisedChars).map((groupId)=>{
+            //!Группа характеристик 
+            */}
+            {  Object.keys(grouperrisedChars).map((groupId,index)=>{
+              
+              let isFirst = (index === 0);
+              console.log(isFirst,`The first is ${index}`);
               let charsForGroup  = grouperrisedChars[groupId];
+              let curentGroup = charGroups.find((group)=>group.id ===(+groupId));
+              let groupName = '';
+              if(curentGroup) {
+                groupName = curentGroup.name;
+              }
               return (
-                <CharGroupWrapper key={groupId} groupName={charGroups[+groupId].name}>               
+                <CharGroupWrapper isFirst={isFirst} key={groupId} groupName={groupName}>               
                           {/* !//!массив характерискик принадлежащий данной группе */}
-                  {charsForGroup.map(char=>{
+                  {
+                  charsForGroup.map(char=>{
                      if (char.valueType === CHAR_VARIANTS.STRING) {
                       return (<RowRenderer key={char.id} char={char}
                         elementId={currentElement.id}
-                        onChangeCharValue={changeCharValue}
-                      />);
+                        onChangeCharValue={changeCharValue}/>);
                     }
                     if (char.valueType === CHAR_VARIANTS.BOOL) {
                       return <RowBoolRenderer key={char.id}
@@ -125,7 +153,8 @@ export const CharsGroupBoxComponent = () => {
                         />);
                     }
                     return null;
-                  })}
+                  })
+                  }
                   </CharGroupWrapper>) 
   })}
             

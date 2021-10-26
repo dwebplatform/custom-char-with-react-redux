@@ -1,0 +1,16 @@
+
+.box-container{
+  display: flex;
+  justify-content: center;
+}
+.char-selector {
+  .MuiSelect-select{
+     display: flex;
+     justify-content: flex-start;
+     min-width: 120px;
+     padding: 5px 10px;
+  }
+}
+.MuiTableCell-root.MuiTableCell-body.MuiTableCell-sizeSmall.css-dsuxgy-MuiTableCell-root{
+  padding: 2px 16px;
+}

@@ -1,10 +1,40 @@
 .chars-group {
+  &__accordion-title{
+    display: flex;
+    align-items: center;
+  }
+  &__accordion-title-text{
+    font-size: 14px !important;
+    font-weight: 600 !important;
+  }
   &__plus-icon{
     font-weight: 600;
     font-size: 18px;
   }
    &__accordion-summary {
      flex-direction: row-reverse;
-     gap: 0.8rem;
+     gap: 0.6rem;
    }
+   &__accordion-title{
+     justify-content: flex-start;
+     display: flex;
+     gap:0.3rem;
+   }
+  
+  //  .char-item__key.MuiTableCell-root.MuiTableCell-body.MuiTableCell-sizeSmall.css-dsuxgy-MuiTableCell-root{
+  //   padding: 0px 0px;
+  // }
+  // .css-dsuxgy-MuiTableCell-root{
+  //   padding: 0px 0px ;
+  // }
+  // .char-item__value.MuiTableCell-root.MuiTableCell-body.MuiTableCell-sizeSmall.css-dsuxgy-MuiTableCell-root{
+  //   padding: 0px 0px ;
+  // }
+  // .MuiTableCell-root.MuiTableCell-body.MuiTableCell-sizeSmall.css-dsuxgy-MuiTableCell-root{
+  //   padding: 0px;
+  // }
 }
+.MuiCheckbox-root.MuiCheckbox-colorPrimary.MuiButtonBase-root.MuiCheckbox-root.MuiCheckbox-colorPrimary.PrivateSwitchBase-root.Mui-checked.css-12wnr2w-MuiButtonBase-root-MuiCheckbox-root{
+  padding: 0px;
+}
+

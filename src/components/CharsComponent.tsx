@@ -104,12 +104,12 @@ export const CharsContainerComponent=()=>{
     <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
       <div className="tabs">
         <div className="tabs__item">
-        <button className={`tabs__item-button ${ curTab === 0 ? 'selected':''}`} onClick={()=>setCurTab(0)} value={0}>По алфавиту</button>
+        <button className={`tabs__item-button ${ curTab === 0 ? 'selected':''}`} onClick={()=>setCurTab(0)} value={0}>1</button>
         </div>
         <div className="tabs__item" >
           <button  
            className={`tabs__item-button ${curTab === 1 ? 'selected':''}`}
-          onClick={()=>setCurTab(1)} value={1}>По группам</button>
+          onClick={()=>setCurTab(1)} value={1}>2</button>
         </div>
       </div>
       <TabVariant value={curTab} index={0}>

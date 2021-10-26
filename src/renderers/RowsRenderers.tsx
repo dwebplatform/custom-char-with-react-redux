@@ -46,10 +46,12 @@ export const RowArrayRenderer = ({ char, elementId, onChangeCharValue }: {
         {char.name}
       </Box>
     </TableCell>
-    <TableCell style={{width:'50%'}} className="char-item__value">
+    <TableCell style={{width:'50%',padding:'0px', border:'none'}} className="char-item__value">
       <Box className="box-container">
-        <FormControl >
-          <Select value={curentSubCharId} onChange={(e)=>{handleChange(e.target.value);}}
+        <FormControl style={{flex:'1', width:'100%'}} >
+          <Select style={{width:'100%', padding:'0px', border:'none'}} 
+          disableUnderline
+          value={curentSubCharId} onChange={(e)=>{handleChange(e.target.value);}}
           className="char-selector">
             {char.ARRAY_VALUE.map((subChar) => {
               return (<MenuItem 

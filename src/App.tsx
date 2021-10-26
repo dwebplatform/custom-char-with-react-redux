@@ -19,7 +19,7 @@ function App() {
   
   return (
     <Container sx={{ width: '500px' }}>
-      <Box style={{ width: '100%', marginBottom: '1rem', display: 'flex', justifyContent: 'center', gap: '10px' }}>
+      <Box style={{ width: '100%', display: 'flex', justifyContent: 'center',  }}>
         <ElementSelector />
       </Box>
       <CharsContainerComponent />

@@ -1,5 +1,5 @@
 
-import React,{useState} from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 
@@ -41,25 +41,29 @@ interface ICharsAccordion {
   groupName: string;
 }
 
-const CharsAccordion:React.FC<ICharsAccordion> = ({isFirst,children, groupName}) => {
-  const [isExpanded,setExpanded] = useState<boolean>(isFirst);
-  const handleChange=()=>{
+const CharsAccordion: React.FC<ICharsAccordion> = ({ isFirst, children, groupName }) => {
+  const [isExpanded, setExpanded] = useState<boolean>(isFirst);
+  const handleChange = () => {
     setExpanded(!isExpanded);
   }
   return (<Accordion
     className="chars-group"
     expanded={isExpanded}
     onChange={handleChange}>
-    <AccordionSummary  className="chars-group__accordion-summary">
-        <Box className="chars-group__accordion-title">
+    <AccordionSummary className="chars-group__accordion-summary" style={{
+      height:'25px',
+      minHeight:'25px',
+      maxHeight:'25px'
+    }}>
+      <Box className="chars-group__accordion-title">
         <Box className="chars-group__accordion-title-item">
-        {!isExpanded && <PlusIcon/>}
-        {isExpanded && <MinusIcon/>}
+          {!isExpanded && <PlusIcon />}
+          {isExpanded && <MinusIcon />}
         </Box>
         <Box className="chars-group__accordion-title-item">
           <Typography className="chars-group__accordion-title-text">{groupName}</Typography>
         </Box>
-        </Box>
+      </Box>
     </AccordionSummary>
     <AccordionDetails>
       {children}
@@ -70,35 +74,28 @@ const CharsAccordion:React.FC<ICharsAccordion> = ({isFirst,children, groupName})
 
 
 
-interface ICharGroupWrapper  {
+interface ICharGroupWrapper {
   isFirst: boolean;
   groupName: string;
   children: any;
 }
-export const CharGroupWrapper: React.FC<ICharGroupWrapper> =({isFirst, groupName,children})=>{
-  console.log(isFirst);
+export const CharGroupWrapper: React.FC<ICharGroupWrapper> = ({ isFirst, groupName, children }) => {
   return (<TableRow>
-    <TableCell style={{ width: '100%' }}>
-     <CharsAccordion isFirst={isFirst} groupName={groupName}>
-     <Box>
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 100 }} size="small" aria-label="a dense table">
-            <TableHead>
-              <TableRow>
-                <TableCell className="char-header__title">Тип</TableCell>
-                <TableCell>Название</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {children}
+    <TableCell style={{ width: '100%', padding: '0px' }}>
+      <CharsAccordion isFirst={isFirst} groupName={groupName} >
+        <Box>
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 100 }} size="small" aria-label="a dense table">
+              <TableBody >
+                {children}
               </TableBody>
-                      </Table>
-                    </TableContainer>
-                    </Box>
-                 </CharsAccordion>
-                </TableCell>
-                </TableRow>
-              );
+            </Table>
+          </TableContainer>
+        </Box>
+      </CharsAccordion>
+    </TableCell>
+  </TableRow>
+  );
 }
 export const CharsGroupBoxComponent = () => {
 
@@ -108,56 +105,54 @@ export const CharsGroupBoxComponent = () => {
     return <EmptyBox />;
   }
 
-  const grouperrisedChars = _.groupBy(currentElement.chars, (char)=>char.groupId);
-  console.log(grouperrisedChars);
+  const grouperrisedChars = _.groupBy(currentElement.chars, (char) => char.groupId);
   return (
-    <Box>      
+    <Box>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 100 }} size="small" aria-label="a dense table">
-          <TableBody>
+          <TableBody >
             {/* 
             //!Группа характеристик 
             */}
-            {  Object.keys(grouperrisedChars).map((groupId,index)=>{
-              
+            {Object.keys(grouperrisedChars).map((groupId, index) => {
+
               let isFirst = (index === 0);
-              console.log(isFirst,`The first is ${index}`);
-              let charsForGroup  = grouperrisedChars[groupId];
-              let curentGroup = charGroups.find((group)=>group.id ===(+groupId));
+              let charsForGroup = grouperrisedChars[groupId];
+              let curentGroup = charGroups.find((group) => group.id === (+groupId));
               let groupName = '';
-              if(curentGroup) {
+              if (curentGroup) {
                 groupName = curentGroup.name;
               }
               return (
-                <CharGroupWrapper isFirst={isFirst} key={groupId} groupName={groupName}>               
-                          {/* !//!массив характерискик принадлежащий данной группе */}
+                <CharGroupWrapper isFirst={isFirst} key={groupId} groupName={groupName}>
+                  {/* !//!массив характерискик принадлежащий данной группе */}
                   {
-                  charsForGroup.map(char=>{
-                     if (char.valueType === CHAR_VARIANTS.STRING) {
-                      return (<RowRenderer key={char.id} char={char}
-                        elementId={currentElement.id}
-                        onChangeCharValue={changeCharValue}/>);
-                    }
-                    if (char.valueType === CHAR_VARIANTS.BOOL) {
-                      return <RowBoolRenderer key={char.id}
-                        char={char}
-                        elementId={currentElement.id}
-                        onChangeCharValue={changeCharValue} />
-                    }
-                    if (char.valueType === CHAR_VARIANTS.ARRAY) {
-                      return (<RowArrayRenderer 
-                        key={char.id}   
-                        elementId={currentElement.id}
-                        onChangeCharValue={changeCharValue} 
-                        char={char}
+                    charsForGroup.map(char => {
+                      if (char.valueType === CHAR_VARIANTS.STRING) {
+                        return (<RowRenderer key={char.id} char={char}
+                          elementId={currentElement.id}
+                          onChangeCharValue={changeCharValue} />);
+                      }
+                      if (char.valueType === CHAR_VARIANTS.BOOL) {
+                        return <RowBoolRenderer key={char.id}
+                          char={char}
+                          elementId={currentElement.id}
+                          onChangeCharValue={changeCharValue} />
+                      }
+                      if (char.valueType === CHAR_VARIANTS.ARRAY) {
+                        return (<RowArrayRenderer
+                          key={char.id}
+                          elementId={currentElement.id}
+                          onChangeCharValue={changeCharValue}
+                          char={char}
                         />);
-                    }
-                    return null;
-                  })
+                      }
+                      return null;
+                    })
                   }
-                  </CharGroupWrapper>) 
-  })}
-            
+                </CharGroupWrapper>)
+            })}
+
           </TableBody>
         </Table>
       </TableContainer>
